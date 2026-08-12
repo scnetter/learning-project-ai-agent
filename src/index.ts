@@ -8,16 +8,15 @@ import {ChatPromptTemplate} from "@langchain/core/prompts";
 const model = createChatModel();
 
 const prompt = ChatPromptTemplate.fromMessages([
-    ["system", "You explain technical topics clearly for Node.js developers."],
-    ["human", "Explain {topic} in the context of {projectType}."]
+    ["system", "You are a precise assistant for backend TypeScript development."],
+    ["human", "Give a concise explanation of {concept}"]
 ]);
 
-const messages = await prompt.formatMessages({
-    topic: "chat model messages",
-    projectType: "a typescript AI agent application"
-});
+const chain = prompt.pipe(model);
 
-const response = await model.invoke(messages);
+const response = await chain.invoke({
+    concept: "prompt templates in LangChain.js"
+})
 
 console.log("Response:", response.content);
 
