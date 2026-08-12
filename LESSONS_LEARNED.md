@@ -32,3 +32,14 @@ This journal tracks key design decisions, technical insights, and takeaways whil
 ## 4. Agent Context & Workspace Rules (`GEMINI.md`)
 - **Agent Rules**: Adding `GEMINI.md` to the project root allows the Antigravity agent (`agy`) to automatically discover project guidelines (such as using Bun instead of Node/npm) across all sessions.
 - **Slash Commands**: Use `/learn` to store new rules and corrections directly into project memory.
+
+---
+
+## 5. Core Architectural Principle: Validate Data at System Boundaries
+- **Boundary Validation Rule**: Whenever untrusted data crosses a boundary into your application logic, validate its shape and content immediately using explicit schemas (e.g. Zod).
+- **Key System Boundaries in AI Agent Architecture**:
+  1. **OS → Application**: Environment variables validated at startup via Zod schemas (`src/config/env.ts`).
+  2. **Model → Tool Execution**: Tool arguments produced by the LLM validated via Zod schemas before executing local functions.
+  3. **Model → Application State**: Structured LLM outputs validated via schemas (`.withStructuredOutput()`) to guarantee expected types.
+  4. **Storage / External APIs → Prompt Context**: Vector search results and external API responses validated before being injected into prompt templates.
+
