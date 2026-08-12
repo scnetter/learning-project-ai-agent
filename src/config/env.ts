@@ -1,26 +1,17 @@
-function requiredEnv(name: string): string {
-    const value = process.env[name];
+import {z} from 'zod';
 
-    if(!value || value.trim().length === 0) {
-        throw new Error(`Missing required environment variable: ${name}`);
-    }
-    
-    return value;
-}
+const EnvSchema = z.object({
+    OPENAI_API_KEY: z.string().min(1, "Missing required environment variable: OPENAI_API_KEY"),
+    LANGSMITH_TRACING: z.string().optional().default('false'),
+    LANGSMITH_API_KEY: z.string().optional(),
+    LANGSMITH_PROJECT: z.string().optional().default('learning-project-ai-agent'),
+});
 
-function optionalEnv(name: string, fallback: string): string {
-    const value = process.env[name];
-
-    if(!value || value.trim().length === 0) {
-        return fallback;
-    }
-    
-    return value;
-}
+const parsedEnv = EnvSchema.parse(process.env);
 
 export const env = {
-    openAIApiKey: requiredEnv('OPENAI_API_KEY'),
-    langSmithTracing: optionalEnv('LANGSMITH_TRACING', 'false'),
-    langSmithApiKey: optionalEnv('LANGSMITH_API_KEY', ''),
-    langSmithProject: optionalEnv('LANGSMITH_PROJECT', 'learning-project-ai-agent'),
+    openAIApiKey: parsedEnv.OPENAI_API_KEY,
+    langSmithTracing: parsedEnv.LANGSMITH_TRACING,
+    langSmithApiKey: parsedEnv.LANGSMITH_API_KEY,
+    langSmithProject: parsedEnv.LANGSMITH_PROJECT
 }
