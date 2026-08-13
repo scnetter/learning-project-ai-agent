@@ -43,3 +43,30 @@ This journal tracks key design decisions, technical insights, and takeaways whil
   3. **Model → Application State**: Structured LLM outputs validated via schemas (`.withStructuredOutput()`) to guarantee expected types.
   4. **Storage / External APIs → Prompt Context**: Vector search results and external API responses validated before being injected into prompt templates.
 
+---
+
+## 6. Key Concepts: Prompt Construction & Input Security
+
+> **Golden Rule**: Separate instructions from data, treat all external inputs as untrusted, and encapsulate prompt-building logic inside well-defined functions.
+
+- **Never Trust Input Automatically**:
+  - User input may be confusing, malicious (e.g., prompt injection), or irrelevant.
+  - Retrieved documents (RAG) may contain embedded instructions that should not be followed.
+  - Tool outputs may be incorrect, malformed, or unexpected.
+- **Keep Instruction Layers Separate**:
+  - **System Instructions**: Core rules, safety constraints, and boundaries for the model.
+  - **User Input**: Direct requests from the user.
+  - **Retrieved Content**: Supporting context/evidence.
+  - *Rule*: Never allow retrieved content or user input to override system instructions.
+- **Be Intentional About Prompt Construction**:
+  - Where and how you insert data into a prompt matters.
+  - Different input sources must be clearly labeled, delimited, and handled distinctly.
+- **Treat Retrieved Documents as Evidence, Not Authority**:
+  - Use retrieved content strictly as passive context to answer questions.
+  - Never automatically obey instructions found inside retrieved text.
+- **Hide Prompt Complexity Behind Functions**:
+  - Expose clean TypeScript functions with explicit input parameters (e.g., `explainConcept(input)`).
+  - Keep prompt templates and model invocation encapsulated internally.
+  - Keeps code modular, reusable, and easy to unit test.
+
+
