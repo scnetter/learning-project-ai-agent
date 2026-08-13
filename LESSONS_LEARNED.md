@@ -14,12 +14,16 @@ This journal tracks key design decisions, technical insights, and takeaways whil
 
 ---
 
-## 2. Environment Variable Validation (Zod vs. Manual)
+## 2. Environment Variable & Data Validation (Zod vs. Manual)
 - **Manual Validation**: Checking `process.env[KEY]` with helper functions (`requiredEnv`, `optionalEnv`) works well for simple scripts.
 - **Schema-Based Validation (Zod)**:
   - Using `zod` (e.g., `z.object({ OPENAI_API_KEY: z.string().min(1) }).parse(process.env)`) provides declarative schema validation.
   - Automatically infers TypeScript types for `env` without needing manual type annotations.
   - Fails fast at startup with clear structural error messages if environment configuration is invalid.
+- **Compile-Time Types vs. Runtime Validation (`z.infer` vs `.parse`)**:
+  - `z.infer<typeof Schema>` gives **compile-time** type safety in your IDE (e.g., preventing you from passing a `number` where a `string` is expected).
+  - `.parse(input)` enforces **runtime** value constraints (e.g., `.min(2)`, `.max(120)`, non-empty strings) when the JavaScript code actually executes.
+
 
 ---
 
