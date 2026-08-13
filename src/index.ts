@@ -1,23 +1,13 @@
-console.log("Hello from Bun + TypeScript!");
+import { explainConcept } from "./agents/conceptExplainer.js";
 
-// import {HumanMessage, SystemMessage} from "@langchain/core/messages";
-import {createChatModel} from "./models/chatModels.js";
-import {ChatPromptTemplate} from "@langchain/core/prompts";
+console.log("Running concept explainer agent...");
 
+const explanation = await explainConcept({
+    concept: "Prompt Templates in LangChain",
+    audience: "junior TypeScript developers"
+});
 
-const model = createChatModel();
-
-const prompt = ChatPromptTemplate.fromMessages([
-    ["system", "You are a precise assistant for backend TypeScript development."],
-    ["human", "Give a concise explanation of {concept}"]
-]);
-
-const chain = prompt.pipe(model);
-
-const response = await chain.invoke({
-    concept: "prompt templates in LangChain.js"
-})
-
-console.log("Response:", response.content);
+console.log("\n--- Explanation ---");
+console.log(explanation);
 
 process.exit(0);
