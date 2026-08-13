@@ -73,4 +73,23 @@ This journal tracks key design decisions, technical insights, and takeaways whil
   - Keep prompt templates and model invocation encapsulated internally.
   - Keeps code modular, reusable, and easy to unit test.
 
+---
+
+## 7. Architectural Selection Guide: Choosing the Right LangChain Pattern
+
+Selecting the appropriate LangChain pattern depends on predictability, statefulness, and decision-making requirements:
+
+| Pattern | Best For | Key Characteristics | Examples |
+| :--- | :--- | :--- | :--- |
+| **Linear Chains (`prompt.pipe(model)`)** | Predictable, single-turn, fixed tasks | Deterministic, fast, cheap, stateless, fixed step-by-step pipeline | Text summarization, structured extraction, content classification |
+| **Conversational Chains (with Memory)** | Open-ended, multi-turn conversations | Maintains chat message history/thread state across user turns | Support chatbots, interactive QA assistants |
+| **Retrieval Chains (RAG)** | Question-answering over external data | Retrieves relevant context from vector stores/databases into prompt | Searching private docs, knowledge base QA |
+| **Autonomous Agents & Graphs (LangGraph)** | Dynamic, non-linear, multi-step problem solving | Dynamic decision loops (ReAct), autonomous tool selection, branching, self-correction | Research agents, automated coding assistants, workflow orchestrators |
+
+### Decision Rules of Thumb:
+- **Use Chains when**: The path from input to output is fixed and predictable. You know the exact sequence of steps ahead of time and do not need dynamic decision loops or tool selection.
+- **Use Agents / LangGraph when**: The execution path cannot be hardcoded in advance. The system must inspect intermediate outputs, decide which tools to call, and loop until a goal is achieved.
+- **Use Memory when**: State and context from previous user interactions must persist across turns.
+
+
 
